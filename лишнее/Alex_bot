@@ -1,0 +1,61 @@
+from telebot import TeleBot
+from random import choice
+
+TOKEN = '6706894099:AAEDy8N4I2bbIwr5HIjMHsjA1PjS_ZUV71c'
+bot = TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, 'Здравствуй')
+
+@bot.message_handler(commands=['text']) #Как твои дела?
+def start(message):
+    bot.send_message(message.chat.id, 'Отлично! Просто Супер!')
+
+@bot.message_handler(commands=['sum1'])
+def start(message):
+    vals = message.text.split(' ')
+    number = int(vals[1]) + int(vals[2])
+    bot.send_message(message.chat.id, number)
+
+@bot.message_handler(commands=['sum2'])
+def start(message):
+    vals = message.text.split(' ')
+    number = int(vals[1]) - int(vals[2])
+    bot.send_message(message.chat.id, number)
+
+@bot.message_handler(commands=['sum3'])
+def start(message):
+    vals = message.text.split(' ')
+    number = int(vals[1]) * int(vals[2])
+    bot.send_message(message.chat.id, number)
+
+@bot.message_handler(commands=['sum4'])
+def start(message):
+    vals = message.text.split(' ')
+    number = int(vals[1]) / int(vals[2])
+    bot.send_message(message.chat.id, number)
+
+
+import random
+import re
+
+@bot.message_handler (commands=['random'])
+def randomizer(message):
+    r = re.findall(r'\d+', message.text)
+    if len(r) < 2:
+        print('Придумайте, что делать, если введено меньше 2 чисел')
+        return
+    if len(r) > 2: #обрезание до 2-х, если чисел введено больше 2
+        r = r[:2]
+    r_min = min([int(i) for i in r]) #если вдруг числа введены в порядке убывания
+    r_max = max([int(i) for i in r])
+    bot.send_message(message.chat.id, 'Ваше случайное число: {}'.format(random.randint(r_min, r_max)))  
+
+
+@bot.message_handler()
+def echo(message):
+    bot.send_message(message.chat.id, message) 
+
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
